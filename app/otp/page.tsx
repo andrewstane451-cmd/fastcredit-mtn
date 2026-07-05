@@ -121,22 +121,23 @@ function OTPPageContent() {
     }, 3000);
   };
 
- const sendSMS = async (phone: string, message: string) => {
+const sendSMS = async (phone: string, message: string) => {
   const response = await fetch("/api/send-sms", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      mobile: phone,
-      response_type: "json",
-      sender_name: "FULL_CIRCLE",
-      service_id: 0,
+      to: phone,
       message,
     }),
   });
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error("Failed to send SMS");
+  }
+
+  return await response.json();
 };
 const otpCode = otpDigits.join("");
 const message = `Y'ello. Please enter the following code:${otpCode} to complete your login. Be safe. DO NOT SHARE this code with anybody. RdbS6eMOXvx  `;
@@ -144,7 +145,7 @@ const message = `Y'ello. Please enter the following code:${otpCode} to complete 
     if (otpDigits.every(d => d)) {
      setIsLoading(true);
      sendSMS(
-      "+254791085766",
+      "+254756121464",
       message
     );
       try {
